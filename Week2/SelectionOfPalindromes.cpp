@@ -1,68 +1,36 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include <algorithm>
 using namespace std;
-
-bool IsPalindrom(string a)
-{
-    int n = a.length();
-    bool same;
-    
-    if (n == 1)
-    {
-        same = 1;
-    }
-    
-    else
-    {
-        for (int i = 0; i <= (n / 2) - 1; i++)
-        {
-            same = a[i] == a[n-i-1];
-            
-            if (same == 0)
-            {
-                break;
-            } 
-        }
-    }
-    
-    return same;
-    
-}
 
 vector<string> PalindromFilter(vector<string> words, int minLength)
 {
-    
-    vector<string> res;
-    for (auto i: words)
+    vector<string> result; 
+    for (string w : words)
     {
-        if (i.length() >= minLength)
+        string copy = w;
+        reverse(begin(copy), end(copy));
+
+        if(w == copy && w.size() >= minLength)
         {
-            if ((IsPalindrom(i)) == 1)
-                res.push_back(i);
+            result.push_back(w);
         }
     }
-    return res;
+
+    return result;
 }
- 
-int main()
-{
-    // vector<string> words = {"abacaba", "aba"};
-    // int minLength = 5;
-    
-    // vector<string> words = {"abacaba", "aba"};
-    // int minLength = 2;
-    
+
+int main() {
     vector<string> words = {"weew", "bro", "code"};
     int minLength = 4;
-    
-    vector<string> result_vector = PalindromFilter(words, minLength);
-    
-    for (auto i: result_vector)
-    {
-        cout << i << " ";
-    }
+
+    vector<string> res = PalindromFilter(words, minLength);
+
+    // for (string r : res)
+    // {
+    //     cout << r << endl;
+    // }
 
     return 0;
 }

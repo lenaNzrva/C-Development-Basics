@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-void UpdateIfGreate(int first, int& second)
+void UpdateIfGreater(int first, int& second)
 {
     if (first > second)
     {
@@ -9,13 +9,13 @@ void UpdateIfGreate(int first, int& second)
     }
 }
 
-//int main()
-//{
-//     int x = 4;
-//     int y = 2;
-    
-//     UpdateIfGreater(x, y);
-    
-//     // cout << y;
-    //return 0;
-//}
+int main()
+{
+
+    int a = 2;
+    int b = 4;
+    UpdateIfGreater(a, b);
+
+    // cout << b;
+    return 0;
+}

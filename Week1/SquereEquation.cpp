@@ -29,10 +29,10 @@ int main()
             cout << x;
         }
         
-        else 
-        {
-            cout << "D less than 0";
-        }
+//        else
+//        {
+//            cout << "D less than 0";
+//        }
     }
     
     else if (A==0 && B!=0)
@@ -42,10 +42,10 @@ int main()
         cout << x;
     }
     
-    else 
-    {
-        cout << "No solutions";
-    }
+//    else
+//    {
+//        cout << "No solutions";
+//    }
 
     
     return 0;
