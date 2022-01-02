@@ -3,11 +3,11 @@
     "tasks": [
         {
             "label": "build",
+            "command": "dotnet",
             "type": "shell",
-            "command": "msbuild",
             "args": [
+                "build",
                 "/property:GenerateFullPaths=true",
-                "/t:build",
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",

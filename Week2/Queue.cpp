@@ -64,7 +64,15 @@ int main()
     int N;
     for (int i=0; i<Q; ++i)
     {
-        cin >> whatToDo >> N;
+        cin >> whatToDo;
+
+        if (whatToDo!="WORRY_COUNT")
+        {
+            cin >> N;
+        }else
+        {
+            WORRY_COUNT(queue);
+        }
 
         if (whatToDo=="COME" && N > 0)
         {
@@ -78,9 +86,6 @@ int main()
         }else if(whatToDo=="QUIET")
         {
             QUIET(queue, N);
-        }else if(whatToDo=="WORRY_COUNT")
-        {
-            WORRY_COUNT(queue);
         }
     }
 
