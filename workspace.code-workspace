@@ -15,7 +15,8 @@
 			"string_view": "cpp",
 			"initializer_list": "cpp",
 			"iostream": "cpp",
-			"*.tcc": "cpp"
+			"*.tcc": "cpp",
+			"map": "cpp"
 		}
 	}
 }
