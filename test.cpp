@@ -1,9 +1,13 @@
 #include <iostream>
+#include <set>
+
+using namespace std;
 
 int main()
 {
-    int a = 0;
-    std::cin >> a;
-    std::cout << "Hello" << a << std::endl;
+    set<int> a = {1,2,3,4,5};
+
+    a.erase(10);
+
     return 0;
 }
