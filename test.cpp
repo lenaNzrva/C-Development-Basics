@@ -5,9 +5,9 @@ using namespace std;
 
 int main()
 {
-    set<int> a = {1,2,3,4,5};
+    // set<int> a = {1,2,3,4,5};
 
-    a.erase(10);
+    // a.erase(10);
 
     return 0;
 }
