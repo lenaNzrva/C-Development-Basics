@@ -9,5 +9,7 @@ int main()
 
     // a.erase(10);
 
+    cout << "lena";
+
     return 0;
-}
+}   
