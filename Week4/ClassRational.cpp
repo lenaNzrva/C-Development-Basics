@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -12,7 +13,9 @@ public:
       N = numerator;
       D = denominator;
 
-      if (N!=0 and D!=0)
+    //   if (N==int(N) && D==int(D))
+
+      if (N!=0 && D!=0)
       {
         int nod = NOD(N, D);
         if (nod != 1){N=numerator/nod; D=denominator/nod;}
@@ -116,31 +119,50 @@ ostream& operator<< (ostream& stream,const Rational& object)
 
 istream& operator>> (istream& stream, Rational& object)
 {
-    if (stream)
-    {
-        cout << "lena" << endl;
-        int N, D;
-        stream >> N;
-        stream.ignore(1);
-        stream >> D;
+    string test;
+    getline(stream, test, '/');
+    cout << test << endl;
 
-        object = {N,D};
-    }
-    
     return stream;
 }
 
 
 int main() {
+    {
+        ostringstream output;
+        output << Rational(-6, 8);
+        if (output.str() != "-3/4") {
+            cout << "Rational(-6, 8) should be written as \"-3/4\"" << endl;
+            return 1;
+        }
+    }
+
+    {
+        istringstream input("5/7");
+        Rational r;
+        input >> r;
+        bool equal = r == Rational(5, 7);
+        if (!equal) {
+            cout << "5/7 is incorrectly read as " << r << endl;
+            return 2;
+        }
+    }
+
+    {
+        istringstream input("");
+        Rational r;
+        bool correct = !(input >> r);
+        if (!correct) {
+            cout << "Read from empty stream works incorrectly" << endl;
+            return 3;
+        }
+    }
 
     {
         istringstream input("5/7 10/8");
         Rational r1, r2;
         input >> r1 >> r2;
-        cout <<  r1.Numerator() << " " << r1.Denominator() << endl;
-        cout << r2.Numerator() << " " << r2.Denominator() << endl;
         bool correct = r1 == Rational(5, 7) && r2 == Rational(5, 4);
-
         if (!correct) {
             cout << "Multiple values are read incorrectly: " << r1 << " " << r2 << endl;
             return 4;
@@ -148,12 +170,25 @@ int main() {
 
         input >> r1;
         input >> r2;
-        cout <<  r1.Numerator() << " " << r1.Denominator() << endl;
-        cout << r2.Numerator() << " " << r2.Denominator() << endl;
         correct = r1 == Rational(5, 7) && r2 == Rational(5, 4);
         if (!correct) {
             cout << "Read from empty stream shouldn't change arguments: " << r1 << " " << r2 << endl;
             return 5;
+        }
+    }
+
+    {
+        istringstream input1("1*2"), input2("1/"), input3("/4");
+        Rational r1, r2, r3;
+        input1 >> r1;
+        input2 >> r2;
+        input3 >> r3;
+        bool correct = r1 == Rational() && r2 == Rational() && r3 == Rational();
+        if (!correct) {
+            cout << "Reading of incorrectly formatted rationals shouldn't change arguments: "
+                 << r1 << " " << r2 << " " << r3 << endl;
+
+            return 6;
         }
     }
 
