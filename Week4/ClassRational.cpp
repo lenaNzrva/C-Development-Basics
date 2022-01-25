@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <set>
+#include <map>
 #include <vector>
 
 using namespace std;
@@ -177,6 +179,29 @@ istream& operator>> (istream& stream, Rational& object)
 
 }
 
+bool operator< (const Rational& lhs, const Rational& rhs)
+{
+    int lhsNewN, rhsNewN;
+    if (lhs.Denominator() != rhs.Denominator())
+    {
+        lhsNewN = lhs.Numerator()*rhs.Denominator();
+        rhsNewN = rhs.Numerator()*lhs.Denominator();
+        return lhsNewN<rhsNewN;
+    }else{return lhs.Numerator()<rhs.Numerator();}
+
+}
+
+bool operator> (const Rational& lhs, const Rational& rhs)
+{
+    int lhsNewN, rhsNewN;
+    if (lhs.Denominator() != rhs.Denominator())
+    {
+        lhsNewN = lhs.Numerator()*rhs.Denominator();
+        rhsNewN = rhs.Numerator()*lhs.Denominator();
+        return lhsNewN>rhsNewN;
+    }else{return lhs.Numerator()>rhs.Numerator();}
+
+}
 
 int main() {
 
