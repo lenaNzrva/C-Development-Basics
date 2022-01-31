@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 #include <set>
+#include <iomanip>
 
 using namespace std;
 
@@ -11,12 +12,48 @@ class Date
 public:
     Date(const string& str)
     {
+        int intermediate_y, intermediate_m, intermediate_d; 
         stringstream ss(str);
-        ss >> year;
-        ss.ignore(1);
-        ss >> month;
-        ss.ignore(1);
-        ss >> day;
+        if(ss >> intermediate_y && ss.peek() == 45)
+        {
+            ss.ignore(1);
+            if(ss >> intermediate_m && ss.peek() == 45)
+            {
+                ss.ignore(1);
+                if(ss >> intermediate_d && ss.peek() == -1)
+                {
+                    if (intermediate_m < 1 || intermediate_m > 12)
+                    {
+                        cout << "Month value is invalid: " << intermediate_m << endl;
+                        throw invalid_argument("");
+                    }
+                    else if (intermediate_d < 1 || intermediate_d > 31)
+                    {
+                        cout << "Day value is invalid: " << intermediate_d << endl;
+                        throw invalid_argument("");
+                    }
+                    else
+                    {
+                        year = intermediate_y;
+                        month = intermediate_m;
+                        day = intermediate_d;
+                    }
+                }else
+                {
+                    cout << "Wrong date format: " << str << endl;
+                    throw invalid_argument("");
+                }
+            }else
+            {
+                cout << "Wrong date format: " << str << endl;
+                throw invalid_argument("");
+            }
+        }else
+        {
+            cout << "Wrong date format: " << str << endl;
+            throw invalid_argument("");
+        }
+
     }
 
     int y() const {return year;}
@@ -50,13 +87,18 @@ public:
             if (M[date].count(event))
             {
                 M[date].erase(event);
-                cout << "Deleted successfully";
-            }else {cout << "Event not found";}
+                cout << "Deleted successfully" << endl;
+
+                if (M[date].size() == 0)
+                {
+                    M.erase(date);
+                }
+            }else {cout << "Event not found" << endl;}
             
         }else 
         {
-            cout << "Deleted " << M[date].size() << " events";
-            M[date].empty();
+            cout << "Deleted " << M[date].size() << " events" << endl;
+            M.erase(date);
         }
     }
 
@@ -70,7 +112,17 @@ public:
             }
         }   
     }
-    void Print ();
+    void Print ()
+    {
+        for (auto i: M)
+        {
+            for (auto j: i.second)
+            {
+                cout << setw(4) << setfill('0') << i.first.y() << '-' << setw(2) << setfill('0') << i.first.m() << '-' << 
+                setw(2) << setfill('0') << i.first.d() << ' ' << j << endl; 
+            }
+        }
+    };
 private:
 
     map<Date, set<string>> M;
@@ -84,32 +136,42 @@ int main()
 
     while (getline(cin, command))
     {
-        stringstream ss(command);
-        string todo, data, event;
+        if (command != "")
+        {
+            stringstream ss(command);
+            string todo, data, event;
 
-        getline(ss, todo, ' ');
-        getline(ss, data, ' ');
-        Date date(data);
-        getline(ss, event, ' ');
+            getline(ss, todo, ' ');
+            getline(ss, data, ' ');
+            getline(ss, event, ' ');
 
-        if (todo == "Add")
-        {
-            DB.AddEvent(date, event);
-        } 
-        else if (todo == "Del")
-        {
-            DB.DeleteEvent(date, event);
-        }else if (todo == "Find")
-        {
-            DB.Find(date);
-        }else if (todo == "Print")
-        {
-            DB.Print();
+            if (todo == "Add")
+            {
+                try
+                {
+                    Date date(data);
+                    DB.AddEvent(date, event);
+                }catch (invalid_argument& i){continue;}
+            } 
+            else if (todo == "Del")
+            {
+                try
+                {
+                    Date date(data);
+                    DB.DeleteEvent(date, event);
+                }catch (invalid_argument& i){continue;}
+            }else if (todo == "Find")
+            {
+                try
+                {
+                    Date date(data);
+                    DB.Find(date);
+                }catch (invalid_argument& i){continue;}
+            }else if (todo == "Print")
+            {
+                DB.Print();
+            }else{cout << "Unknown command: " << todo << endl;}
         }
-
-        // cout << date.y() << date.m() << date.d();
-
-        // cout << date << ' ' << date.month() << ' ' << date.day() << endl;
     }
 
     return 0;
