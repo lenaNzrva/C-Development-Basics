@@ -23,7 +23,7 @@ int main()
         V.push_back(Temp);
     }
 
-    int sum = 0;
+    int64_t sum = 0;
     for (auto i: V){sum += i;}
     int avg = sum/static_cast<int>(V.size());
 
