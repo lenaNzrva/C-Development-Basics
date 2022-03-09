@@ -34,6 +34,7 @@ istream& operator >> (istream& is, Query& q)
         is >> q.bus;
         is >> stop_count;
 
+        q.stops.clear();
         for (int i=0; i<stop_count; ++i)
         {
             is >> S;
@@ -55,49 +56,75 @@ istream& operator >> (istream& is, Query& q)
     return is;
 }
 
-struct StopsForBusResponse 
+struct BusesForStopResponse 
 {
+    stringstream SS;
 };
 
+ostream& operator << (ostream& os, const BusesForStopResponse& r) 
+{
+    os << r.SS.str();
+    return os;
+}
+
+struct StopsForBusResponse
+{
+    stringstream SS;
+};
 
 ostream& operator << (ostream& os, const StopsForBusResponse& r) 
 {
+    os << r.SS.str();
+    return os;
 }
-
 
 class BusManager {
 public:
     void AddBus(const string& bus, const vector<string>& stops)
     {
-        stops_to_buses[bus] = stops;
+        for (auto &i : stops){buses_to_stop[i].push_back(bus);}
 
-        // cout << endl; 
-        // for (auto &i : stops_to_buses)
-        // {
-        //     cout << i.first << ": ";
-        //     for (auto &j : i.second)
-        //     {
-        //         cout << j << " ";
-        //     }
-
-        //     cout << endl;
-        // }
+        stops_to_bus[bus] = stops;
     }
 
-    StopsForBusResponse GetStopsForBus(const string& bus)
+    BusesForStopResponse GetBusesForStop(const string& stop) const
     {
-        cout << bus;
-        // vector<string> test = stops_to_buses.at(bus);
-
-        for (string &i : stops_to_buses[bus])
+        BusesForStopResponse response;
+        if(buses_to_stop.count(stop))
         {
-            cout << i << " ";
+            for (auto &i : buses_to_stop.at(stop)){response.SS << i << " ";}
         }
+        else {response.SS << "No stop";}
 
+        return response;
     };
 
+    StopsForBusResponse GetStopsForBus(const string& bus) const
+    {
+        StopsForBusResponse response;
+        if (stops_to_bus.count(bus))
+        {
+            for (auto &i : stops_to_bus.at(bus))
+            {
+                response.SS << "Stop " << i << ": ";
+                if (buses_to_stop.at(i).size() == 1){response.SS << "no interchange";}
+                else
+                {
+                    for (auto &j : buses_to_stop.at(i))
+                    {
+                        if (j != bus){response.SS << j << " ";}
+                    }
+                }
+                response.SS << endl;
+            }
+        }
+        else{response.SS << "No bus";}
+
+        return response;
+    }
+
 private:
-    map<string, vector<string>> stops_to_buses;
+    map<string, vector<string>> buses_to_stop, stops_to_bus;
 };
 
 int main() {
@@ -115,9 +142,9 @@ int main() {
             case QueryType::NewBus:
                 bm.AddBus(q.bus, q.stops);
                 break;
-            // case QueryType::BusesForStop:
-            //     cout << bm.GetBusesForStop(q.stop) << endl;
-            //     break;
+            case QueryType::BusesForStop:
+                cout << bm.GetBusesForStop(q.stop) << endl;
+                break;
             case QueryType::StopsForBus:
                 cout << bm.GetStopsForBus(q.bus) << endl;
                 break;
