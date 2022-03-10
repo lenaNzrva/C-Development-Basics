@@ -78,6 +78,17 @@ ostream& operator << (ostream& os, const StopsForBusResponse& r)
     return os;
 }
 
+struct AllBusesResponse 
+{
+    stringstream SS;
+};
+
+ostream& operator << (ostream& os, const AllBusesResponse& r) 
+{
+    os << r.SS.str();
+    return os;
+}
+
 class BusManager {
 public:
     void AddBus(const string& bus, const vector<string>& stops)
@@ -106,13 +117,13 @@ public:
         {
             for (auto &i : stops_to_bus.at(bus))
             {
-                response.SS << "Stop " << i << ": ";
-                if (buses_to_stop.at(i).size() == 1){response.SS << "no interchange";}
+                response.SS << "Stop " << i << ":";
+                if (buses_to_stop.at(i).size() == 1){response.SS << " no interchange";}
                 else
                 {
                     for (auto &j : buses_to_stop.at(i))
                     {
-                        if (j != bus){response.SS << j << " ";}
+                        if (j != bus){response.SS << " " << j;}
                     }
                 }
                 response.SS << endl;
@@ -123,36 +134,56 @@ public:
         return response;
     }
 
+    AllBusesResponse GetAllBuses() const
+    {
+        AllBusesResponse response;
+        if (stops_to_bus.size())
+        {
+            for (auto &i : stops_to_bus)
+            {
+                response.SS << "Bus " << i.first << ":";
+                for (auto &j : i.second)
+                {
+                    response.SS << " " << j;
+                }
+                response.SS << endl;
+            }
+        }
+        else{response.SS << "No buses";}
+
+        return response;
+    }
+
 private:
     map<string, vector<string>> buses_to_stop, stops_to_bus;
 };
 
 int main() {
-    int query_count;
-    Query q;
+    // int query_count;
+    // Query q;
 
-    cin >> query_count;
+    // cin >> query_count;
 
-    BusManager bm;
-    for (int i = 0; i < query_count; ++i) 
-    {
-        cin >> q;
-        switch (q.type) 
-        {
-            case QueryType::NewBus:
-                bm.AddBus(q.bus, q.stops);
-                break;
-            case QueryType::BusesForStop:
-                cout << bm.GetBusesForStop(q.stop) << endl;
-                break;
-            case QueryType::StopsForBus:
-                cout << bm.GetStopsForBus(q.bus) << endl;
-                break;
-            // case QueryType::AllBuses:
-            //     cout << bm.GetAllBuses() << endl;
-            //     break;
-        }
-    }
+    // BusManager bm;
+    // for (int i = 0; i < query_count; ++i) 
+    // {
+    //     cin >> q;
+    //     switch (q.type)
+    //     {
+    //         case QueryType::NewBus:
+    //             bm.AddBus(q.bus, q.stops);
+    //             break;
+    //         case QueryType::BusesForStop:
+    //             cout << bm.GetBusesForStop(q.stop) << endl;
+    //             break;
+    //         case QueryType::StopsForBus:
+    //             cout << bm.GetStopsForBus(q.bus) << endl;
+    //             break;
+    //         case QueryType::AllBuses:
+    //             cout << bm.GetAllBuses() << endl;
+    //             break;
+    //     }
+    // }
 
     return 0;
 }
