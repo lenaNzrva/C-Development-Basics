@@ -10,29 +10,42 @@ using namespace std;
 class Person 
 {
 public:
-    void ChangeFirstName(int year, const string& first_name) {M[year].first = first_name;}
-    void ChangeLastName(int year, const string& last_name) {M[year].second = last_name;}
-    string GetFullName(int year)
+    void ChangeFirstName(int year, const string& first_name) 
+    {
+        M[year].first = first_name;
+        years.insert(year);
+    }
+    void ChangeLastName(int year, const string& last_name) 
+    {
+        M[year].second = last_name;
+        years.insert(year);
+    }
+    void GetFullName(int year)
     {
         string first_name, last_name;
 
-        for (auto& [key, value] : M)
+        for (auto itr = years.begin(); *itr >= year; itr++)
         {
-            cout << key;
+            first_name = M[*itr].first;
+            last_name = M[*itr].second;
         }
-        // stringstream os;
-        // os << M[year].first << " " << M[year].second;
-        // return os.str();
+
+        cout << first_name << "////" << last_name << endl;
     }
 private:
 map<int, pair<string, string>> M;
+set<int> years;
 };
 
 int main()
 {
-    Person P;
-    P.ChangeFirstName(1998, "Lena");
-    cout << P.GetFullName(1998);
+    Person person;
+    person.ChangeFirstName(1965, "Polina");
+    person.ChangeLastName(1967, "Sergeeva");
+    for (int year : {1900, 1965, 1990}) 
+    {
+        person.GetFullName(year);
+    }
 
     return 0;
 }
