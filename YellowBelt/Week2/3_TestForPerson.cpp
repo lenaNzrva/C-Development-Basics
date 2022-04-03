@@ -1,51 +1,116 @@
 #include <iostream>
-#include <utility>
 #include <map>
-#include <set>
 #include <string>
 #include <sstream>
 
 using namespace std;
 
-class Person 
+// class Person 
+// {
+// public:
+//     void ChangeFirstName(int year, const string& first_name) 
+//     {
+//         F[year] = first_name;
+//     }
+//     void ChangeLastName(int year, const string& last_name) 
+//     {
+//         L[year] = last_name;
+//     }
+//     string GetFullName(int year)
+//     {
+//         string first = GetName(F, year);
+//         string last = GetName(L, year);
+
+//         if (first.empty() && last.empty()){return "Incognito";}
+//         else if (first.empty()){return last + " with unknown first name";}
+//         else if (last.empty()){return first + " with unknown last name";}
+
+//         return first + " " + last;
+//     }
+//     // map<int, string>& GetFirstName(){return F;}
+//     // map<int, string>& GetLastName(){return L;}
+// private:
+//     map<int, string> F;
+//     map<int, string> L;
+
+//     string GetName(const map<int, string> &M, const int year)
+//     {
+//         string name;
+//         for (auto [key, val] : M)
+//         {
+//             if (year >= key)
+//             {
+//                 name = val;
+//             }
+//             else {break;}
+//         }
+
+//         return name;
+//     }
+// };
+
+template <typename LHS, typename RHS>
+void AssertEqual(LHS const &lhs, RHS const &rhs)
+{
+    if(lhs!=rhs)
+    {
+        stringstream os;
+        os << lhs << " != " << rhs;
+        throw runtime_error(os.str());
+    }
+}
+
+
+void TestAll()
+{
+    //Проверка добавления в словари
+    {
+        Person person;
+        int year = 1998;
+        string name = "Lena";
+        person.ChangeFirstName(year, name);
+        
+        AssertEqual(name + " with unknown last name", person.GetFullName(year));
+
+    }
+}
+
+
+class TestRunner 
 {
 public:
-    void ChangeFirstName(int year, const string& first_name) 
+    template <class TestFunc>
+    void RunTest(TestFunc func) 
     {
-        M[year].first = first_name;
-        years.insert(year);
-    }
-    void ChangeLastName(int year, const string& last_name) 
-    {
-        M[year].second = last_name;
-        years.insert(year);
-    }
-    void GetFullName(int year)
-    {
-        string first_name, last_name;
-
-        for (auto itr = years.begin(); *itr >= year; itr++)
+        try 
         {
-            first_name = M[*itr].first;
-            last_name = M[*itr].second;
+            func();
+            cerr << "OK" << endl;
+        } 
+        catch (runtime_error& e) 
+        {
+            ++fail_count;
+            cerr << "fail: " << e.what() << endl;
         }
-
-        cout << first_name << "////" << last_name << endl;
     }
+
+    ~TestRunner()
+    {
+        if (fail_count > 0) 
+        {
+        cerr << fail_count << " unit tests failed. Terminate" << endl;
+        exit(1);
+        }
+    }
+
 private:
-map<int, pair<string, string>> M;
-set<int> years;
+    int fail_count = 0;
 };
 
 int main()
 {
-    Person person;
-    person.ChangeFirstName(1965, "Polina");
-    person.ChangeLastName(1967, "Sergeeva");
-    for (int year : {1900, 1965, 1990}) 
-    {
-        person.GetFullName(year);
-    }
+    TestRunner runner;
+    runner.RunTest(TestAll);
 
     return 0;
 }

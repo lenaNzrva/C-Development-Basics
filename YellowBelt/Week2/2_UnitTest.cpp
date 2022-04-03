@@ -44,7 +44,8 @@ void AssertEqual(A a, B b, C c, RHS rhs)
         stringstream os;
         os << a << "X^2 + (" << b << "X) + (" << c << ")" << endl << 
         lhs << "(func res) != " << rhs << "(real res)"; 
-        throw runtime_error(os.str());}
+        throw runtime_error(os.str());
+    }
 }
 
 void TestAll()
