@@ -5,49 +5,48 @@
 
 using namespace std;
 
-// class Person 
-// {
-// public:
-//     void ChangeFirstName(int year, const string& first_name) 
-//     {
-//         F[year] = first_name;
-//     }
-//     void ChangeLastName(int year, const string& last_name) 
-//     {
-//         L[year] = last_name;
-//     }
-//     string GetFullName(int year)
-//     {
-//         string first = GetName(F, year);
-//         string last = GetName(L, year);
+class Person 
+{
+public:
+    void ChangeFirstName(int year, const string& first_name) 
+    {
+        F[year] = first_name;
+    }
+    void ChangeLastName(int year, const string& last_name) 
+    {
+        L[year] = last_name;
+    }
+    string GetFullName(int year)
+    {
+        string first = GetName(F, year);
+        string last = GetName(L, year);
 
-//         if (first.empty() && last.empty()){return "Incognito";}
-//         else if (first.empty()){return last + " with unknown first name";}
-//         else if (last.empty()){return first + " with unknown last name";}
+        if (first.empty() && last.empty()){return "Incognito";}
+        else if (first.empty()){return last + " with unknown first name";}
+        else if (last.empty()){return first + " with unknown last name";}
 
-//         return first + " " + last;
-//     }
-//     // map<int, string>& GetFirstName(){return F;}
-//     // map<int, string>& GetLastName(){return L;}
-// private:
-//     map<int, string> F;
-//     map<int, string> L;
+        return first + " " + last;
+    }
 
-//     string GetName(const map<int, string> &M, const int year)
-//     {
-//         string name;
-//         for (auto [key, val] : M)
-//         {
-//             if (year >= key)
-//             {
-//                 name = val;
-//             }
-//             else {break;}
-//         }
+private:
+    map<int, string> F;
+    map<int, string> L;
 
-//         return name;
-//     }
-// };
+    string GetName(const map<int, string> &M, const int year)
+    {
+        string name;
+        for (auto [key, val] : M)
+        {
+            if (year >= key)
+            {
+                name = val;
+            }
+            else {break;}
+        }
+
+        return name;
+    }
+};
 
 template <typename LHS, typename RHS>
 void AssertEqual(LHS const &lhs, RHS const &rhs)
@@ -70,7 +69,7 @@ void TestAll()
         string name = "Lena";
         person.ChangeFirstName(year, name);
         
-        AssertEqual(name + " with unknown last name", person.GetFullName(year));
+        AssertEqual(name + " with unknown last nam", person.GetFullName(year));
 
     }
 }
@@ -109,6 +108,8 @@ private:
 
 int main()
 {
+    cout << "Lena";
+    return 1;
     TestRunner runner;
     runner.RunTest(TestAll);
 
