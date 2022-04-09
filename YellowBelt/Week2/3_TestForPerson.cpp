@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -62,16 +63,111 @@ void AssertEqual(LHS const &lhs, RHS const &rhs)
 
 void TestAll()
 {
-    //Проверка добавления в словари
+    //unknown last name
     {
         Person person;
         int year = 1998;
         string name = "Lena";
         person.ChangeFirstName(year, name);
-        
-        AssertEqual(name + " with unknown last nam", person.GetFullName(year));
-
+        AssertEqual(name + " with unknown last name", person.GetFullName(year));
     }
+    {
+        Person person;
+        vector<int> year = {1998, 2001};
+        string name = "Lena";
+        person.ChangeFirstName(year[0], name);
+        person.ChangeLastName(year[1], "Nazarova");
+        AssertEqual(name + " with unknown last name", person.GetFullName(year[0])); 
+    }
+    // unknown first name
+    {
+        Person person;
+        int year = 1998;
+        string name = "Nazarova";
+        person.ChangeLastName(year, name);
+        AssertEqual(name + " with unknown first name", person.GetFullName(year));
+    }
+    {
+        Person person;
+        vector<int> year = {1998, 2001};
+        string name = "Nazarova";
+        person.ChangeLastName(year[0], name);
+        person.ChangeFirstName(year[1], "Lena");
+        AssertEqual(name + " with unknown first name", person.GetFullName(year[0])); 
+    }
+    // Incognito
+    {
+        Person person;
+        int year = 1998;
+        AssertEqual("Incognito", person.GetFullName(year));
+    }
+    {
+        Person person;
+        int year = 1998;
+        person.ChangeFirstName(2005, "Lena");
+        person.ChangeLastName(2007, "Nazarova");
+        AssertEqual("Incognito", person.GetFullName(year));
+    }
+    // Normal
+    {
+        Person person;
+        int year = 1998;
+        string fname = "Lena";
+        string lname = "Nazarova";
+        person.ChangeFirstName(year, fname);
+        person.ChangeLastName(year, lname);
+        AssertEqual(fname +" "+ lname, person.GetFullName(year));         
+    }
+    {
+        Person person;
+        int year = 1998;
+        string fname = "Lena";
+        string lname = "Nazarova";
+        person.ChangeFirstName(year, fname);
+        person.ChangeLastName(year, lname);
+        AssertEqual(fname +" "+ lname, person.GetFullName(2007));         
+    }
+    {
+        Person person;
+        vector<int> year = {1998, 2007, 2015};
+        string fname = "Lena";
+        string lname = "Nazarova";
+        person.ChangeFirstName(year[0], fname);
+        person.ChangeLastName(year[1], lname);
+        AssertEqual(fname +" "+ lname, person.GetFullName(year[2]));         
+    }
+    {
+        Person person;
+        vector<int> year = {1998, 2007, 2015};
+        string fname = "Lena";
+        string lname = "Nazarova";
+        person.ChangeFirstName(year[0], fname);
+        person.ChangeLastName(year[1], lname);
+        AssertEqual(fname +" "+ lname, person.GetFullName(year[2]));         
+    }
+    {
+        Person person;
+        vector<int> year = {1998, 2007, 2015, 2070};
+        string fname_1 = "Lena";
+        string fname_2 = "Elena";
+        string lname = "Nazarova";
+        person.ChangeFirstName(year[0], fname_1);
+        person.ChangeFirstName(year[1], fname_2);
+        person.ChangeLastName(year[2], lname);
+        AssertEqual(fname_2 +" "+ lname, person.GetFullName(year[3]));         
+    }
+    {
+        Person person;
+        vector<int> year = {1998, 2007, 2015, 2008};
+        string fname_1 = "Lena";
+        string fname_2 = "Elena";
+        string lname = "Nazarova";
+        person.ChangeFirstName(year[0], fname_1);
+        person.ChangeFirstName(year[2], fname_2);
+        person.ChangeLastName(year[1], lname);
+        AssertEqual(fname_1 +" "+ lname, person.GetFullName(year[3]));         
+    }
+
 }
 
 
@@ -97,8 +193,8 @@ public:
     {
         if (fail_count > 0) 
         {
-        cerr << fail_count << " unit tests failed. Terminate" << endl;
-        exit(1);
+            cerr << fail_count << " unit tests failed. Terminate" << endl;
+            exit(1);
         }
     }
 
@@ -106,10 +202,8 @@ private:
     int fail_count = 0;
 };
 
-int main()
+int main()  
 {
-    cout << "Lena";
-    return 1;
     TestRunner runner;
     runner.RunTest(TestAll);
 
